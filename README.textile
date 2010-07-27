@@ -1,0 +1,2 @@
+<h1>About</h1>
+The TwitPic class provides full access to the TwitPic API, and is developed by @meltingice.
