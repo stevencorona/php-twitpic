@@ -20,6 +20,7 @@ NOTE: Currently only the read-only GET methods are implemented.
 		<endpoint name="show" method="GET">
 			<formats>xml,json</formats>
 			<param name="id" type="string" required="true"/>
+			<param name="page" type="integer" required="false"/>
 		</endpoint>
 	</category>
 	
