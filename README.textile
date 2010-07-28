@@ -1,2 +1,8 @@
 <h1>About</h1>
-The TwitPic class provides full access to the TwitPic API, and is developed by @meltingice.
+The TwitPic class provides full access to the TwitPic API, including photo uploads and write-enabled API methods.
+
+<h1>Dependencies</h1>
+Due to the complexity of OAuth, there are a few PEAR packages that are required.
+
+* HTTP_OAuth
+* HTTP_Request2
