@@ -1,0 +1,3 @@
+<?
+class TwitPicAPIException extends Exception {}
+?>

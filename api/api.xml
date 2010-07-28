@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+This file is a direct mapping of the TwitPic REST API, which
+is documented here: http://dev.twitpic.com/docs/
+
+The implementation and struction is inspired by the Twitter_Services
+PEAR package available here: http://pear.php.net/packages/Services_Twitter
+
+Last Updated: July 27, 2010
+Copyright 2010 Ryan LeFevre <ryan@twitpic.com>
+-->
+
+<api>
+
+	<!-- Media Resources -->
+	<category name="media">
+		<endpoint name="show" method="GET" auth_required="false">
+			<formats>xml,json</formats>
+			<param name="id" type="integer" required="true"/>
+			<param name="id2" type="integer" required="false"/>
+		</endpoint>
+	</category>
+
+</api>
