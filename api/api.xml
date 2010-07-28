@@ -7,19 +7,74 @@ is documented here: http://dev.twitpic.com/docs/
 The implementation and struction is inspired by the Twitter_Services
 PEAR package available here: http://pear.php.net/packages/Services_Twitter
 
-Last Updated: July 27, 2010
+Last Updated: July 28, 2010
 Copyright 2010 Ryan LeFevre <ryan@twitpic.com>
+
+NOTE: Currently only the read-only GET methods are implemented.
 -->
 
 <api>
 
 	<!-- Media Resources -->
 	<category name="media">
-		<endpoint name="show" method="GET" auth_required="false">
+		<endpoint name="show" method="GET">
 			<formats>xml,json</formats>
-			<param name="id" type="integer" required="true"/>
-			<param name="id2" type="integer" required="false"/>
+			<param name="id" type="string" required="true"/>
 		</endpoint>
 	</category>
-
+	
+	<!-- User Resources -->
+	<category name="users">
+		<endpoint name="show" method="GET">
+			<formats>xml,json</formats>
+			<param name="username" type="string" required="true"/>
+		</endpoint>
+	</category>
+	
+	<!-- Comment Resources -->
+	<category name="comments">
+		<endpoint name="show" method="GET">
+			<formats>xml,json</formats>
+			<param name="media_id" type="string" required="true"/>
+			<param name="page" type="integer" required="true"/>
+		</endpoint>
+	</category>
+	
+	<!-- Place Resources -->
+	<category name="place">
+		<endpoint name="show" method="GET">
+			<formats>xml,json</formats>
+			<param name="id" type="string" required="true"/>
+			<param name="user" type="string" required="false"/>
+		</endpoint>
+	</category>
+	<category name="places">
+		<endpoint name="show" method="GET">
+			<formats>xml,json></formats>
+			<param name="user" type="string" required="true"/>
+		</endpoint>
+	</category>
+	
+	<!-- Event Resources -->
+	<category name="events">
+		<endpoint name="show" method="GET">
+			<formats>xml,json</formats>
+			<param name="user" type="string" required="true"/>
+		</endpoint>
+	</category>
+	<category name="event">
+		<endpoint name="show" method="GET">
+			<formats>xml,json</formats>
+			<param name="id" type="string" required="true"/>
+		</endpoint>
+	</category>
+	
+	<!-- Tagging Resources -->
+	<category name="tags">
+		<endpoint name="show" method="GET">
+			<formats>xml,json</formats>
+			<param name="tag" type="string" required="true"/>
+		</endpoint>
+	</category>
+	
 </api>

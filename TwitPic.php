@@ -4,17 +4,21 @@ include 'includes/API.php';
 include 'includes/TwitPicAPIException.php';
 
 class TwitPic {
-	private $api_key, $api;
-	private $mode = MODE_READONLY;
+	private $api, $api_key;
+	private static $mode = MODE_READONLY;
 	
 	public function __construct($api_key = "") {
 		
 		if(is_string($api_key) && strlen($api_key) > 0) {
-			$this->api_key == $api_key;
-			$this->mode = MODE_READWRITE;
+			$this->$api_key == $api_key;
+			self::$mode = MODE_READWRITE;
 		}
 		
-		$this->api = new API();
+		$this->api = new API($this->api_key);
+	}
+	
+	public static function mode() {
+		return self::$mode;
 	}
 	
 	/*
