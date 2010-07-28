@@ -37,8 +37,7 @@ class API {
 	}
 	
 	/*
-	 * Performs a GET API method. This simply uses file_get_contents() to
-	 * perform the API call.
+	 * Performs a GET API method.
 	 */
 	private function executeGET($method_args) {
 		$this->validate_args($method_args);
@@ -50,9 +49,14 @@ class API {
 		$args = $this->get_url_args($method_args);
 		$url .= "?$args";
 		
-		$data = file_get_contents($url);
+		$r = new Http_Request2($url, Http_Request2::METHOD_GET);
+		$res = $r->send();
 		
-		return $this->respond($data);
+		if($res->getStatus() == 200) {
+			return $this->respond($res->getBody());
+		} else {
+			throw new TwitPicAPIException($res->getMessage());
+		}
 	}
 	
 	/*
@@ -88,7 +92,7 @@ class API {
 		/* if auth_required is not set, assume false */
 		if(!isset($this->api_call()->attributes()->auth_required)){ return; }
 		
-		if($this->api_call()->attributes()->auth_required == 'true' && TwitPic::mode() == MODE_READONLY){
+		if($this->api_call()->attributes()->auth_required == 'true' && TwitPic::mode() == TwitPic_Config::MODE_READONLY){
 			throw new TwitPicAPIException("API call {$this->category}/{$this->method} requires an API key");
 		}
 	}
