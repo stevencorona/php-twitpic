@@ -1,16 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <!--
+TwitPic API for PHP
+Copyright 2010 Ryan LeFevre - @meltingice
+
+Licensed under the New BSD License, more info in LICENSE file
+included with this software.
+
+Source code is hosted at http://github.com/meltingice/TwitPic-API-for-PHP
+
+##########################################################################
+
 This file is a direct mapping of the TwitPic REST API, which
 is documented here: http://dev.twitpic.com/docs/
 
 The implementation and struction is inspired by the Twitter_Services
 PEAR package available here: http://pear.php.net/packages/Services_Twitter
-
-Last Updated: July 28, 2010
-Copyright 2010 Ryan LeFevre <ryan@twitpic.com>
-
-NOTE: Currently only the read-only GET methods are implemented.
 -->
 
 <api>
@@ -52,6 +57,14 @@ NOTE: Currently only the read-only GET methods are implemented.
 	<category name="places">
 		<endpoint name="show" method="GET">
 			<formats>xml,json></formats>
+			<param name="user" type="string" required="true"/>
+		</endpoint>
+	</category>
+	
+	<!-- Face Tagging Resources -->
+	<category name="faces">
+		<endpoint name="show" method="POST" auth_required="true">
+			<formats>xml,json</formats>
 			<param name="user" type="string" required="true"/>
 		</endpoint>
 	</category>

@@ -1,12 +1,22 @@
 <?
-class API {
-	private $api, $api_key, $options;
+/*
+ * TwitPic API for PHP
+ * Copyright 2010 Ryan LeFevre - @meltingice
+ * PHP version 5.3.0+
+ *
+ * Licensed under the New BSD License, more info in LICENSE file
+ * included with this software.
+ *
+ * Source code is hosted at http://github.com/meltingice/TwitPic-API-for-PHP
+ */
+ 
+class TwitPic_API {
+	private $api, $options;
 	private $category = null;
 	private $method = null;
+	private $format = null;
 	
-	public function __construct($api_key) {
-		$this->api_key = $api_key;
-		
+	public function __construct() {		
 		$xmlApi = simplexml_load_file('api/api.xml');
 		foreach ($xmlApi->category as $category) {
 			$catName = (string)$category['name'];
@@ -29,7 +39,7 @@ class API {
 		}
 		
 		$this->options = $args[0];
-		if($this->api[$this->category][$this->method]->method == 'POST') {
+		if($this->api_call()->attributes()->method == 'POST') {
 			return $this->executePOST($method_args);
 		} else { // assume GET?
 			return $this->executeGET($method_args);	
@@ -41,11 +51,10 @@ class API {
 	 */
 	private function executeGET($method_args) {
 		$this->validate_args($method_args);
-		$this->check_for_authentication();
 
 		$this->format = $this->get_format();
 		
-		$url = "http://api.twitpic.com/2/{$this->category}/{$this->method}.{$this->format}";
+		$url = $this->get_request_url();
 		$args = $this->get_url_args($method_args);
 		$url .= "?$args";
 		
@@ -55,16 +64,32 @@ class API {
 		if($res->getStatus() == 200) {
 			return $this->respond($res->getBody());
 		} else {
-			throw new TwitPicAPIException($res->getMessage());
+			throw new TwitPicAPIException($res->getBody());
 		}
 	}
 	
 	/*
 	 * Performs a POST API method
 	 */
-	private function executePOST($method_args, $args) {
+	private function executePOST($method_args) {
 		$this->validate_args($method_args);
 		$this->check_for_authentication();
+		$header = $this->build_header();
+		
+		$url = $this->get_request_url();
+		$r = new Http_Request2($url, Http_Request2::METHOD_POST);
+		$r->setHeader('X-Verify-Credentials-Authorization', $header);
+		$r->addPostParameter('key', TwitPic_Config::getAPIKey());
+		foreach($method_args as $arg=>$val) {
+			$r->addPostParameter($arg, $val);
+		}
+		
+		$res = $r->send();
+		if($res->getStatus() == 200) {
+			return $this->respond($res->getBody());
+		} else {
+			throw new TwitPicAPIException($res->getBody());
+		}
 	}
 	
 	/*
@@ -86,15 +111,56 @@ class API {
 	/*
 	 * Checks to see if this API call requires authentication,
 	 * and if we have all the required info.
-	 * ### UNFINISHED ###
 	 */
 	private function check_for_authentication() {
 		/* if auth_required is not set, assume false */
 		if(!isset($this->api_call()->attributes()->auth_required)){ return; }
 		
 		if($this->api_call()->attributes()->auth_required == 'true' && TwitPic::mode() == TwitPic_Config::MODE_READONLY){
-			throw new TwitPicAPIException("API call {$this->category}/{$this->method} requires an API key");
+			throw new TwitPicAPIException("API call {$this->category}/{$this->method} requires an API key and OAuth credentials");
 		}
+	}
+	
+	/*
+	 * When making an authenticated API call, we need
+	 * to build the header that is sent with the authorization
+	 * information.
+	 */
+	private function build_header() {
+		$consumer = TwitPic_Config::getConsumer();
+		$oauth = TwitPic_Config::getOAuth();
+		
+		$signature = HTTP_OAuth_Signature::factory('HMAC_SHA1');
+		$timestamp = gmdate('U');
+		$nonce = uniqid();
+		$version = '1.0';
+
+		$params = array( 'oauth_consumer_key' => $consumer['key'] ,
+			'oauth_signature_method' => 'HMAC-SHA1' ,
+			'oauth_token' =>  $oauth['token'],
+			'oauth_timestamp' => $timestamp ,
+			'oauth_nonce' => $nonce ,
+			'oauth_version' => $version );
+
+		$sig_text = $signature->build( 'GET','https://api.twitter.com/1/account/verify_credentials.json', $params, $consumer['secret'], $oauth['secret'] );
+
+		$params['oauth_signature'] = $sig_text;
+
+		$realm = 'http://api.twitter.com/';
+		$header = 'OAuth realm="' . $realm . '"';
+		foreach ($params as $name => $value) {
+			$header .= ", " . HTTP_OAuth::urlencode($name) . '="' . HTTP_OAuth::urlencode($value) . '"';
+		}
+
+		return $header;
+	}
+	
+	/*
+	 * Builds the TwitPic API request URL
+	 */
+	private function get_request_url() {
+		$this->format = $this->get_format();
+		return "http://api.twitpic.com/2/{$this->category}/{$this->method}.{$this->format}";
 	}
 	
 	/*
