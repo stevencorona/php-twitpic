@@ -2,7 +2,12 @@
 The TwitPic class provides full access to the TwitPic API, including photo uploads and write-enabled API methods.
 
 <h1>Dependencies</h1>
-Due to the complexity of OAuth, there are a few PEAR packages that are required.
+Due to the complexity of OAuth, there are 2 PEAR packages that are required (not counting their own dependencies):
 
 * HTTP_OAuth
 * HTTP_Request2
+
+If anyone is interested in porting this project to remove these dependencies, feel free to fork it and give it a go.
+
+<h1>Example Usage</h1>
+Check out the file aptly named EXAMPLE.php to see how the class is used. More examples coming soon.

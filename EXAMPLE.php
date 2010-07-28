@@ -19,10 +19,23 @@ $oauth_secret = ""; // the user's OAuth secret (also from Twitter login)
  */
 $twitpic = new TwitPic($api_key, $consumer_key, $consumer_secret, $oauth_token, $oauth_secret);
 
-/*
- * Retrieves all images where the user is facetagged
- */
-$user = $twitpic->faces->show(array('user'=>'meltingice'));
+try {
 
-print_r($user);
+	/*
+	 * Retrieves all images where the user is facetagged
+	 */
+	$user = $twitpic->faces->show(array('user'=>'meltingice'));
+	print_r($user->images);
+	
+	$media = $twitpic->media->show(array('id'=>1234));
+	echo $media->message;
+	
+	$user = $twitpic->users->show(array('username'=>'meltingice'), array('process'=>false, 'format'=>'xml'));
+	echo $user; // raw XML response data
+	
+} catch (TwitPicAPIException $e) {
+
+	echo $e->getMessage();
+	
+}
 ?>
