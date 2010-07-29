@@ -33,6 +33,12 @@ try {
 	$user = $twitpic->users->show(array('username'=>'meltingice'), array('process'=>false, 'format'=>'xml'));
 	echo $user; // raw XML response data
 	
+	/*
+	 * Uploads an image to TwitPic
+	 */
+	 $resp = $twitpic->upload(array('media'=>'path/to/file.jpg', 'message'=>'This is an example'));
+	 print_r($resp);
+	
 } catch (TwitPicAPIException $e) {
 
 	echo $e->getMessage();
