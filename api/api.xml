@@ -44,6 +44,15 @@ PEAR package available here: http://pear.php.net/packages/Services_Twitter
 			<param name="media_id" type="string" required="true"/>
 			<param name="page" type="integer" required="true"/>
 		</endpoint>
+		<endpoint name="create" method="POST" auth_required="true">
+			<formats>xml,json</formats>
+			<param name="media_id" type="string" required="true"/>
+			<param name="message" type="string" required="true"/>
+		</endpoint>
+		<endpoint name="delete" method="POST" auth_required="true">
+			<formats>xml,json</formats>
+			<param name="comment_id" type="integer" required="true"/>
+		</endpoint>
 	</category>
 	
 	<!-- Place Resources -->
@@ -67,6 +76,26 @@ PEAR package available here: http://pear.php.net/packages/Services_Twitter
 			<formats>xml,json</formats>
 			<param name="user" type="string" required="true"/>
 		</endpoint>
+		<endpoint name="create" method="POST" auth_required="true">
+			<formats>xml,json</formats>
+			<param name="media_id" type="string" required="true"/>
+			<param name="top_coord" type="integer" required="true"/>
+			<param name="left_coord" type="integer" required="true"/>
+			<param name="name" type="string" required="false"/>
+			<param name="username" type="string" required="false"/>
+		</endpoint>
+		<endpoint name="edit" method="POST" auth_required="true">
+			<formats>xml,json</formats>
+			<param name="tag_id" type="integer" required="true"/>
+			<param name="top_coord" type="integer" required="false"/>
+			<param name="left_coord" type="integer" required="false"/>
+			<param name="name" type="string" required="false"/>
+			<param name="username" type="string" required="false"/>
+		</endpoint>
+		<endpoint name="delete" method="POST" auth_required="true">
+			<formats>xml,json</formats>
+			<param name="tag_id" type="integer" required="true"/>
+		</endpoint>
 	</category>
 	
 	<!-- Event Resources -->
@@ -81,6 +110,26 @@ PEAR package available here: http://pear.php.net/packages/Services_Twitter
 			<formats>xml,json</formats>
 			<param name="id" type="string" required="true"/>
 		</endpoint>
+		<endpoint name="create" method="POST" auth_required="true">
+			<formats>xml,json</formats>
+			<param name="name" type="string" required="true"/>
+			<param name="description" type="string" required="false"/>
+			<param name="trigger" type="string" required="false"/>
+		</endpoint>
+		<endpoint name="delete" method="POST" auth_required="true">
+			<formats>xml,json</formats>
+			<param name="event_id" type="integer" required="true"/>
+		</endpoint>
+		<endpoint name="add" method="POST" auth_required="true">
+			<formats>xml,json</formats>
+			<param name="media_id" type="integer" required="true"/>
+			<param name="event_id" type="integer" required="true"/>
+		</endpoint>
+		<endpoint name="remove" method="POST" auth_required="true">
+			<formats>xml,json</formats>
+			<param name="event_id" type="integer" required="true"/>
+			<param name="media_id" type="integer" required="true"/>
+		</endpoint>
 	</category>
 	
 	<!-- Tagging Resources -->
@@ -88,6 +137,16 @@ PEAR package available here: http://pear.php.net/packages/Services_Twitter
 		<endpoint name="show" method="GET">
 			<formats>xml,json</formats>
 			<param name="tag" type="string" required="true"/>
+		</endpoint>
+		<endpoint name="create" method="POST" auth_required="true">
+			<formats>xml,json</formats>
+			<param name="media_id" type="string" required="true"/>
+			<param name="tags" type="string" required="true"/>
+		</endpoint>
+		<endpoint name="delete" method="POST" auth_required="true">
+			<formats>xml,json</formats>
+			<param name="media_id" type="string" required="true"/>
+			<param name="tag_id" type="integer" required="true"/>
 		</endpoint>
 	</category>
 	

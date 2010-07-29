@@ -86,7 +86,11 @@ class TwitPic_API {
 		
 		$res = $r->send();
 		if($res->getStatus() == 200) {
-			return $this->respond($res->getBody());
+			if(strlen($res->getBody() > 0)) {
+				return $this->respond($res->getBody());
+			} else {
+				return true;
+			}
 		} else {
 			throw new TwitPicAPIException($res->getBody());
 		}
