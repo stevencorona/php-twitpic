@@ -46,6 +46,47 @@ class TwitPic_API {
 		}
 	}
 	
+	private function upload_photo($args) {
+		if(count($args) >= 1) {
+			$method_args = array_shift($args);
+		} else {
+			$method_args = array();
+		}
+		
+		$this->options = $args[0];
+		$this->category = 'upload';
+		
+		if(TwitPic::mode() == TwitPic_Config::MODE_READONLY) {
+			throw new TwitPicAPIException("Uploading a photo requires an API key and Twitter credentials");
+		}
+		
+		if(!isset($method_args['message']) || !isset($method_args['media'])) {
+			throw new TwitPicAPIException("Missing required parameter for photo upload");
+		}
+		
+		if(!is_file($method_args['media']) || !is_readable($method_args['media'])) {
+			throw new TwitPicAPIException("Unable to find or read file");
+		}
+		
+		$this->format = $this->get_format();
+		
+		$header = $this->build_header();
+		$url = "http://api.twitpic.com/2/upload.{$this->format}";
+		$r = new Http_Request2($url, Http_Request2::METHOD_POST);
+		$r->setHeader('X-Verify-Credentials-Authorization', $header);
+		$r->addPostParameter('key', TwitPic_Config::getAPIKey());
+		$r->addPostParameter('message', $method_args['message']);
+		$r->addUpload('media', $method_args['media']);
+		
+		$res = $r->send();
+		
+		if($res->getStatus() == 200) {
+			return $this->respond($res->getBody());
+		} else {
+			throw new TwitPicAPIException($res->getBody());
+		}
+	}
+	
 	/*
 	 * Performs a GET API method.
 	 */
@@ -172,7 +213,7 @@ class TwitPic_API {
 	 * if none is given.
 	 */
 	private function get_format() {
-		if(!isset($this->api_call()->formats)) {
+		if(!isset($this->api_call()->formats) || $this->category == 'upload') {
 			$allowed = array('xml','json');
 		} else {
 			$allowed = explode(',', $this->api_call()->formats);
@@ -266,7 +307,9 @@ class TwitPic_API {
 	 * is defined and begins the execution of the API call.
 	 */
 	private function api_method($method, $args) {
-		if(is_null($this->category)) {
+		if($method == 'upload') { // need to make an exception for upload
+			return $this->upload_photo($args);
+		} elseif(is_null($this->category)) {
 			throw new TwitPicAPIException('WTF is goin on yo?');
 		} elseif(!isset($this->api[$this->category][$method])) {
 			throw new TwitPicAPIException("API method not found for category {$this->category}");

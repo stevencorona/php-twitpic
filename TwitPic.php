@@ -32,6 +32,10 @@ class TwitPic {
 		return TwitPic_Config::mode();
 	}
 	
+	public function upload($method_args, $options=array()) {
+		return $this->api->upload($method_args, $options);
+	}
+	
 	/*
 	 * Throw the request over to the API class to handle
 	 */
