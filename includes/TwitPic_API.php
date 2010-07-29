@@ -81,7 +81,12 @@ class TwitPic_API {
 		$res = $r->send();
 		
 		if($res->getStatus() == 200) {
-			return $this->respond($res->getBody());
+			if($this->options['tweet']) {
+				return $this->post_to_twitter($res->getBody());
+			} else {
+				return $this->respond($res->getBody());
+			}
+			
 		} else {
 			throw new TwitPicAPIException($res->getBody());
 		}
@@ -171,7 +176,7 @@ class TwitPic_API {
 	 * to build the header that is sent with the authorization
 	 * information.
 	 */
-	private function build_header() {
+	private function build_header($tweet=false) {
 		$consumer = TwitPic_Config::getConsumer();
 		$oauth = TwitPic_Config::getOAuth();
 		
@@ -179,17 +184,32 @@ class TwitPic_API {
 		$timestamp = gmdate('U');
 		$nonce = uniqid();
 		$version = '1.0';
-
-		$params = array( 'oauth_consumer_key' => $consumer['key'] ,
-			'oauth_signature_method' => 'HMAC-SHA1' ,
-			'oauth_token' =>  $oauth['token'],
-			'oauth_timestamp' => $timestamp ,
-			'oauth_nonce' => $nonce ,
-			'oauth_version' => $version );
-
-		$sig_text = $signature->build( 'GET','https://api.twitter.com/1/account/verify_credentials.json', $params, $consumer['secret'], $oauth['secret'] );
-
-		$params['oauth_signature'] = $sig_text;
+		
+		if(is_string($tweet)) {
+			$params = array( 'oauth_consumer_key' => $consumer['key'] ,
+				'oauth_signature_method' => 'HMAC-SHA1' ,
+				'oauth_token' =>  $oauth['token'],
+				'oauth_timestamp' => $timestamp ,
+				'oauth_nonce' => $nonce ,
+				'oauth_version' => $version,
+				'status' => $tweet);
+	
+			$sig_text = $signature->build( 'POST',"http://api.twitter.com/1/statuses/update.{$this->format}", $params, $consumer['secret'], $oauth['secret'] );
+	
+			$params['oauth_signature'] = $sig_text;
+		} else {
+			$params = array( 'oauth_consumer_key' => $consumer['key'] ,
+				'oauth_signature_method' => 'HMAC-SHA1' ,
+				'oauth_token' =>  $oauth['token'],
+				'oauth_timestamp' => $timestamp ,
+				'oauth_nonce' => $nonce ,
+				'oauth_version' => $version );
+	
+			$sig_text = $signature->build( 'GET','https://api.twitter.com/1/account/verify_credentials.json', $params, $consumer['secret'], $oauth['secret'] );
+	
+			$params['oauth_signature'] = $sig_text;
+		}
+		
 
 		$realm = 'http://api.twitter.com/';
 		$header = 'OAuth realm="' . $realm . '"';
@@ -268,6 +288,34 @@ class TwitPic_API {
 		$this->reset_settings();
 		
 		return $data;
+	}
+	
+	private function post_to_twitter($resp_data) {
+		if($this->format == 'json') {
+			$data = json_decode($resp_data);
+		} elseif($this->format == 'xml') {
+			$data = simplexml_load_string($resp_data);
+		}
+		
+		$tweet = $this->truncate((string)$data->text) . ' ' . (string)$data->url;
+		
+		$header = $this->build_header($tweet);
+		$url = "http://api.twitter.com/1/statuses/update.{$this->format}";
+		
+		$r = new Http_Request2($url, Http_Request2::METHOD_POST);
+		$r->setHeader('Authorization', $header);
+		$r->addPostParameter('status', $tweet);
+		$res = $r->send();
+		
+		if($res->getStatus() == 200) {
+			return $this->respond($resp_data);
+		} else {
+			throw new TwitPicAPIException("Image uploaded, but error posting to Twitter");
+		}
+	}
+	
+	private function truncate($msg) {
+		return mb_substr($msg, 0, 114, 'UTF-8');
 	}
 	
 	/*

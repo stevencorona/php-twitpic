@@ -38,6 +38,13 @@ try {
 	 */
 	 $resp = $twitpic->upload(array('media'=>'path/to/file.jpg', 'message'=>'This is an example'));
 	 print_r($resp);
+	 
+	 /*
+	  * Uploads an image to TwitPic AND posts a tweet
+	  * to Twitter
+	  */
+	  $resp = $twitpic->uploadAndPost(array('media'=>'path/to/file.jpg', 'message'=>'Another example'));
+	  print_r($resp);
 	
 } catch (TwitPicAPIException $e) {
 

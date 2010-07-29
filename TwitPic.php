@@ -33,6 +33,12 @@ class TwitPic {
 	}
 	
 	public function upload($method_args, $options=array()) {
+		$options['tweet'] = false;
+		return $this->api->upload($method_args, $options);
+	}
+	
+	public function uploadAndPost($method_args, $options=array()) {
+		$options['tweet'] = true;
 		return $this->api->upload($method_args, $options);
 	}
 	
