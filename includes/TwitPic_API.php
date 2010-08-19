@@ -150,11 +150,42 @@ class TwitPic_API {
 		$api_call = $this->api_call();
 		foreach($api_call->param as $param) {
 			$attrs = $param->attributes();
+			
+			if(array_key_exists((string)$attrs->name, $args)) {
+				if(!$this->validate_arg((string)$attrs->type, $args[(string)$attrs->name])) {
+					throw new TwitPicAPIException("Invalid datatype for {$attrs->name} while calling {$this->category}/{$this->method}");
+				}
+			}
+			
 			if(isset($attrs->required)) {
 				if($attrs->required == 'true' && !array_key_exists((string)$attrs->name, $args)) {
 					throw new TwitPicAPIException("Missing required parameter '{$attrs->name}' for {$this->category}/{$this->method}");
 				}
 			}
+		}
+	}
+	
+	/*
+	 * Validates the datatype of all arguments based on
+	 * the type defined in the API. Returns true if value
+	 * is valid, false otherwise.
+	 */
+	private function validate_arg($type, $value) {
+		switch($type) {
+			case 'integer':
+				return is_integer($value);
+			case 'string':
+				return is_string($value);
+			case 'short_id':
+				return (bool) !preg_match('/([^A-Za-z0-9]+)/', $value);
+			case 'username':
+				if(mb_strlen($value, 'UTF-8') > 15 || mb_strlen($value, 'UTF-8') == 0) {
+					return false;
+				}
+				
+				return (bool) !preg_match('/([^A-Za-z0-9_]+)/', $value);
+			case 'hashtag':
+				return (bool) !preg_match('/([^A-Za-z0-9_])+/', $value);
 		}
 	}
 	
@@ -277,6 +308,7 @@ class TwitPic_API {
 	 * the 'process' argument.
 	 */
 	private function respond($data) {
+		$data = htmlspecialchars_decode($data, ENT_QUOTES);
 		if((isset($this->options['process']) && $this->options['process'] == true) || !isset($this->options['process'])) {
 			if($this->format == 'json') {
 				$data = json_decode($data);

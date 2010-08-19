@@ -24,7 +24,7 @@ PEAR package available here: http://pear.php.net/packages/Services_Twitter
 	<category name="media">
 		<endpoint name="show" method="GET">
 			<formats>xml,json</formats>
-			<param name="id" type="string" required="true"/>
+			<param name="id" type="short_id" required="true"/>
 			<param name="page" type="integer" required="false"/>
 		</endpoint>
 	</category>
@@ -33,7 +33,7 @@ PEAR package available here: http://pear.php.net/packages/Services_Twitter
 	<category name="users">
 		<endpoint name="show" method="GET">
 			<formats>xml,json</formats>
-			<param name="username" type="string" required="true"/>
+			<param name="username" type="username" required="true"/>
 		</endpoint>
 	</category>
 	
@@ -41,12 +41,12 @@ PEAR package available here: http://pear.php.net/packages/Services_Twitter
 	<category name="comments">
 		<endpoint name="show" method="GET">
 			<formats>xml,json</formats>
-			<param name="media_id" type="string" required="true"/>
+			<param name="media_id" type="short_id" required="true"/>
 			<param name="page" type="integer" required="true"/>
 		</endpoint>
 		<endpoint name="create" method="POST" auth_required="true">
 			<formats>xml,json</formats>
-			<param name="media_id" type="string" required="true"/>
+			<param name="media_id" type="short_id" required="true"/>
 			<param name="message" type="string" required="true"/>
 		</endpoint>
 		<endpoint name="delete" method="POST" auth_required="true">
@@ -60,13 +60,13 @@ PEAR package available here: http://pear.php.net/packages/Services_Twitter
 		<endpoint name="show" method="GET">
 			<formats>xml,json</formats>
 			<param name="id" type="string" required="true"/>
-			<param name="user" type="string" required="false"/>
+			<param name="user" type="username" required="false"/>
 		</endpoint>
 	</category>
 	<category name="places">
 		<endpoint name="show" method="GET">
 			<formats>xml,json></formats>
-			<param name="user" type="string" required="true"/>
+			<param name="user" type="username" required="true"/>
 		</endpoint>
 	</category>
 	
@@ -74,15 +74,15 @@ PEAR package available here: http://pear.php.net/packages/Services_Twitter
 	<category name="faces">
 		<endpoint name="show" method="POST" auth_required="true">
 			<formats>xml,json</formats>
-			<param name="user" type="string" required="true"/>
+			<param name="user" type="username" required="true"/>
 		</endpoint>
 		<endpoint name="create" method="POST" auth_required="true">
 			<formats>xml,json</formats>
-			<param name="media_id" type="string" required="true"/>
+			<param name="media_id" type="short_id" required="true"/>
 			<param name="top_coord" type="integer" required="true"/>
 			<param name="left_coord" type="integer" required="true"/>
 			<param name="name" type="string" required="false"/>
-			<param name="username" type="string" required="false"/>
+			<param name="username" type="username" required="false"/>
 		</endpoint>
 		<endpoint name="edit" method="POST" auth_required="true">
 			<formats>xml,json</formats>
@@ -90,7 +90,7 @@ PEAR package available here: http://pear.php.net/packages/Services_Twitter
 			<param name="top_coord" type="integer" required="false"/>
 			<param name="left_coord" type="integer" required="false"/>
 			<param name="name" type="string" required="false"/>
-			<param name="username" type="string" required="false"/>
+			<param name="username" type="username" required="false"/>
 		</endpoint>
 		<endpoint name="delete" method="POST" auth_required="true">
 			<formats>xml,json</formats>
@@ -114,7 +114,7 @@ PEAR package available here: http://pear.php.net/packages/Services_Twitter
 			<formats>xml,json</formats>
 			<param name="name" type="string" required="true"/>
 			<param name="description" type="string" required="false"/>
-			<param name="trigger" type="string" required="false"/>
+			<param name="trigger" type="hashtag" required="false"/>
 		</endpoint>
 		<endpoint name="delete" method="POST" auth_required="true">
 			<formats>xml,json</formats>
@@ -136,7 +136,7 @@ PEAR package available here: http://pear.php.net/packages/Services_Twitter
 	<category name="tags">
 		<endpoint name="show" method="GET">
 			<formats>xml,json</formats>
-			<param name="tag" type="string" required="true"/>
+			<param name="tag" type="hashtag" required="true"/>
 		</endpoint>
 		<endpoint name="create" method="POST" auth_required="true">
 			<formats>xml,json</formats>
@@ -145,7 +145,7 @@ PEAR package available here: http://pear.php.net/packages/Services_Twitter
 		</endpoint>
 		<endpoint name="delete" method="POST" auth_required="true">
 			<formats>xml,json</formats>
-			<param name="media_id" type="string" required="true"/>
+			<param name="media_id" type="short_id" required="true"/>
 			<param name="tag_id" type="integer" required="true"/>
 		</endpoint>
 	</category>
