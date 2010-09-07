@@ -1,4 +1,4 @@
-<?
+<?php
 /*
  * TwitPic API for PHP
  * Copyright 2010 Ryan LeFevre - @meltingice
@@ -57,6 +57,3 @@ class TwitPic_Config {
 		return array('key'=>self::$consumer_key, 'secret'=>self::$consumer_secret);
 	}
 }
-
-
-?>

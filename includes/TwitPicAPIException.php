@@ -1,4 +1,4 @@
-<?
+<?php
 /*
  * TwitPic API for PHP
  * Copyright 2010 Ryan LeFevre - @meltingice
@@ -11,4 +11,3 @@
  */
  
 class TwitPicAPIException extends Exception {}
-?>

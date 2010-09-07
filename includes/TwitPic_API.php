@@ -1,4 +1,4 @@
-<?
+<?php
 /*
  * TwitPic API for PHP
  * Copyright 2010 Ryan LeFevre - @meltingice
@@ -17,7 +17,7 @@ class TwitPic_API {
 	private $format = null;
 	
 	public function __construct() {		
-		$xmlApi = simplexml_load_file('api/api.xml');
+		$xmlApi = simplexml_load_file(dirname(__FILE__) .'/../api/api.xml');
 		foreach ($xmlApi->category as $category) {
 			$catName = (string)$category['name'];
 			$this->api[$catName] = array();
@@ -365,7 +365,7 @@ class TwitPic_API {
 	 * Gets the current API call
 	 */
 	private function api_call() {
-		return $this->api[$this->category][$this->method];
+		return isset($this->api[$this->category][$this->method]) ? $this->api[$this->category][$this->method] : null;
 	}
 	
 	/*

@@ -1,4 +1,4 @@
-<?
+<?php
 /*
  * TwitPic API for PHP
  * Copyright 2010 Ryan LeFevre - @meltingice
@@ -10,9 +10,9 @@
  * Source code is hosted at http://github.com/meltingice/TwitPic-API-for-PHP
  */
  
-include 'includes/config.php';
-include 'includes/TwitPic_API.php';
-include 'includes/TwitPicAPIException.php';
+include dirname(__FILE__) .'/includes/config.php';
+include dirname(__FILE__) .'/includes/TwitPic_API.php';
+include dirname(__FILE__) .'/includes/TwitPicAPIException.php';
 
 require_once 'HTTP/Request2.php';
 require_once 'HTTP/OAuth/Consumer.php';
@@ -46,6 +46,11 @@ class TwitPic {
 	 * Throw the request over to the API class to handle
 	 */
 	public function __get($key) {
-		return $this->api->{$key};
+        if(is_null($this->api)) {
+            return null;
+        }
+        else {
+            return $this->api->{$key};
+        }
 	}
 }
