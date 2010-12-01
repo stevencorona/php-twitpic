@@ -41,7 +41,11 @@ try {
 	 
 	 /*
 	  * Uploads an image to TwitPic AND posts a tweet
-	  * to Twitter
+	  * to Twitter.
+	  *
+	  * NOTE: this still uses v2 of the TwitPic API. This means that the code makes 2 separate
+	  * requests: one to TwitPic for the image, and one to Twitter for the tweet. Because of this,
+	  * understand this call may take a bit longer than simply uploading the image.
 	  */
 	  $resp = $twitpic->uploadAndPost(array('media'=>'path/to/file.jpg', 'message'=>'Another example'));
 	  print_r($resp);
