@@ -1,5 +1,7 @@
 **This library is abandoned and I no longer work at Twitpic. It's probably not a good idea to use it.**
 
+*Twitpic is dead. You probably, really truly, do not want to be using this. Think of it as a relic from the past. It's kind of like you're visiting a museum.*
+
 <h1>About</h1>
 The TwitPic class provides full access to the TwitPic API, including photo uploads and write-enabled API methods.
 
